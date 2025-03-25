@@ -9,6 +9,10 @@
 #include <cstdint>
 
 
+static constexpr ptrdiff_t magic_number = 74;
+std::vector<unsigned char> const instructions{0x48, 0x8b, 0x5d, 0xf8, 0xc9, 0xc3};
+
+
 int magic_function(std::vector<int> const & vec)
 {
     static int counter = 0;
@@ -52,7 +56,7 @@ bool optimize(unsigned char * addr, std::span<unsigned char const> instructions)
         return false;
     }
 
-    std::memcpy(addr, instructions.data(), instructions.size());
+    std::memcpy(addr + magic_number, instructions.data(), instructions.size());
 
     if(!make_page_read_and_execute(addr))
     {
