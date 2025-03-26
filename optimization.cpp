@@ -14,10 +14,7 @@ int main()
         acc += magic_function(vec);
     }
 
-    std::vector<unsigned char> const instructions{0x48, 0x8b, 0x5d, 0xf8, 0xc9, 0xc3};
-    unsigned char * magic_function_address = (unsigned char *) &magic_function + 78;
-
-    if(!optimize(magic_function_address, instructions))
+    if(!optimize((unsigned char *) &magic_function + magic_number, instructions))
     {
         std::cerr << "Failed to optimize the function\n";
         return 1;

@@ -35,7 +35,7 @@ static void with_optimization(benchmark::State& state)
             sum += magic_function(vec);
         }
 
-        if (!optimize((unsigned char *) &magic_function, instructions))
+        if (!optimize((unsigned char *) &magic_function + magic_number, instructions))
         {
             std::cerr << "Failed to optimize the function\n";
             break;
@@ -61,7 +61,7 @@ static void with_optimization_and_pause(benchmark::State& state)
         }
 
         state.PauseTiming();
-        if (!optimize((unsigned char *)&magic_function, instructions))
+        if (!optimize((unsigned char *) &magic_function + magic_number, instructions))
         {
             std::cerr << "Failed to optimize the function\n";
             break;

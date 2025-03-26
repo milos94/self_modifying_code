@@ -8,8 +8,7 @@
 #include <numeric>
 #include <cstdint>
 
-
-static constexpr ptrdiff_t magic_number = 74;
+static constexpr ptrdiff_t magic_number = 78;
 std::vector<unsigned char> const instructions{0x48, 0x8b, 0x5d, 0xf8, 0xc9, 0xc3};
 
 
@@ -37,7 +36,7 @@ bool make_page_read_and_execute(unsigned char * addr) {
 
 bool hotpatch(unsigned char * target, unsigned char * replacement)
 {
-    if (make_page_writable(target) != 0)
+    if (!make_page_writable(target))
     {
         return false;
     }
@@ -46,6 +45,10 @@ bool hotpatch(unsigned char * target, unsigned char * replacement)
                                                   (unsigned char)(rel >> 16), (unsigned char)(rel >> 24)};
 
     std::memcpy(target, instructions.data(), instructions.size());
+    if (!make_page_read_and_execute(target))
+    {
+        return false;
+    }
     return true;
 }
 
@@ -56,7 +59,7 @@ bool optimize(unsigned char * addr, std::span<unsigned char const> instructions)
         return false;
     }
 
-    std::memcpy(addr + magic_number, instructions.data(), instructions.size());
+    std::memcpy(addr, instructions.data(), instructions.size());
 
     if(!make_page_read_and_execute(addr))
     {
